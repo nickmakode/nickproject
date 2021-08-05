@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="new.css">
+    <link rel="stylesheet" href="new.js">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+
+
+        }
+
+        .box {
+            width: 600px;
+            padding: 30px;
+            position: absolute;
+
+            left: 50%;
+
+            text-align: left;
+            background: rgba(0, 0, 0, 0.4);
+
+        }
+
+        .box h1 {
+            color: beige;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .box input[type="text"], .box input[type="submit"] {
+            border: 0;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            border: 3px solid black;
+            padding: 14px 10px;
+            width: 260px;
+            color: black;
+
+        }
+
+        .box input[type="email"], .box input[type="submit"] {
+            border: 0;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            border: 3px solid black;
+            padding: 14px 10px;
+            width: 260px;
+            color: black;
+
+        }
+
+        .box input[type="number"], .box input[type="submit"] {
+            border: 0;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            border: 3px solid black;
+            padding: 14px 10px;
+            width: 260px;
+            color: black;
+
+        }
+
+
+        .box input[type="text"]:focus, .box input[type="submit"]:focus {
+            width: 220px;
+            border-color: yellow;
+        }
+
+        .box input[type="submit"] {
+            border: 0;
+            margin: 20px auto;
+            text-align: center;
+            color: black;
+            border-radius: 24px;
+            cursor: pointer;
+        }
+
+        .box input[type="submit"]:hover {
+            background: chartreuse;
+        }
+
+        .box input[type="checkbox "] {
+            width: 0;
+            height: 1;
+        }
+
+        @media (max-width: 500px) {
+            .box h1, .box input[type="submit"], .box input[type="text"] {
+                background: crimson;
+            }
+
+        }
+
+        .box textarea {
+            border: 0;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            border: 3px solid black;
+            padding: 14px 10px;
+            width: 260px;
+            color: black;
+            height: 120px;
+
+        }
+
+        .design {
+            width: 90px;
+            height: 90px;
+        }
+
+        .design1 {
+            height: 800px;
+            width: 600px;
+            padding: 30px;
+            position: absolute;
+
+            right: 50%;
+
+            text-align: left;
+            background: white;
+
+        }
+
+    </style>
+</head>
+<body>
+<img class="design1" src="C:/training company/loyalty file/nikhil/img1.PNG">
+
+<form id="form" class="box" action="" novalidate>
+    {% csrf_token %}
+    <img class="design" src="C:/training company/loyalty file/nikhil/img1.PNG">
+    <h1> Login</h1>
+    <label>name :</label>
+    {#    <input type="text" name="" placeholder="enter firstname" id="firstname">#}
+    {{ form.name }}
+      <span class="form-text text-red" id="name_error"></span><br>
+    <label>Email :</label>
+    {#    <input type="text" name="" placeholder="enter email" id="email">#}
+    {{ form.email }}
+     <span class="form-text text-red" id="email_error"></span><br>
+    <label>Phone No :</label>
+    {#    <input type="text" name="" placeholder="enter phone no" id="phoneno">#}
+    {{ form.number }}
+     <span class="form-text text-red" id="number_error"></span><br>
+    <label>Discription :</label>
+    {#    <textarea name="" id="massage" placeholder="Write something.." type="text" cols="30" row="10"></textarea>#}
+    {{ form.description }}
+     <span class="form-text text-red" id="description_error"></span><br>
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $("#form").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'home' %}",
+            data: serializedData,
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.data);
+                let message = JSON.stringify(data.data);
+                alert(message);
+                $('#form').trigger("reset");
+            },
+            error: function (error) {
+                console.log(error);
+                var errorData = error.responseJSON;
+                if (errorData.name) {
+                    $("#name_error").html(errorData.name);
+                } else {
+                    $("#name_error").html("");
+                }
+
+
+                if (errorData.number) {
+                    $("#number_error").html(errorData.number);
+                } else {
+                    $("#number_error").html("");
+                }
+
+
+                if (errorData.email) {
+                    $("#email_error").html(errorData.email);
+                } else {
+                    $("#email_error").html("");
+                }
+
+
+                if (errorData.description) {
+                    $("#description_error").html(errorData.description);
+                } else {
+                    $("#description_error").html("");
+                }
+
+
+
+            }
+        })
+    });
+</script>
+
+
+</body>
